@@ -1,0 +1,31 @@
+# Dependency directories
+node_modules/
+jspdf/
+
+# Environment variables (sensitive API keys, credentials)
+.env
+.env.*
+
+# Local Database Files
+backend/data/
+backend/data/*.json
+backend/data/*.txt
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Development / IDE directories
+.vscode/
+.idea/
+.gemini/
+scratch/
+walkthrough.md
+task.md
+implementation_plan.md
