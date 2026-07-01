@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { generateFIRReportPDF } from '../utils/pdfGenerator';
 import { motion } from 'framer-motion';
 import { Shield, Search, ArrowLeft, Download, User, Calendar, MapPin, ClipboardList, Clock } from 'lucide-react';
@@ -29,7 +30,7 @@ const CaseTracking = () => {
     setError('');
     setCaseData(null);
     try {
-      const res = await axios.get(`http://localhost:5001/api/cases/${idToSearch}`);
+      const res = await axios.get(`${API_URL}/cases/${idToSearch}`);
       if (res.data.success) {
         setCaseData(res.data.data);
       }

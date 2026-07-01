@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axiosInstance from 'axios';
+import { API_URL } from '../config';
 
 const AuthContext = createContext();
 
@@ -10,8 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
 
-  // Base API configuration
-  const API_URL = 'http://localhost:5001/api';
   
   // Set default header if token is in storage
   useEffect(() => {

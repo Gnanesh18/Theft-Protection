@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { generateFIRReportPDF } from '../utils/pdfGenerator';
 import { motion } from 'framer-motion';
 import { Shield, ArrowLeft, ArrowRight, Upload, ChevronRight, FileText, X, CheckCircle2 } from 'lucide-react';
@@ -111,7 +112,7 @@ const ReportTheft = () => {
     });
 
     try {
-      const res = await axios.post('http://localhost:5001/api/cases', formPayload, {
+      const res = await axios.post(`${API_URL}/cases`, formPayload, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 

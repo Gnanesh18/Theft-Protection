@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
@@ -40,18 +41,18 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       if (activeTab === 'analytics') {
-        const res = await axios.get('http://localhost:5001/api/analytics');
+        const res = await axios.get(`${API_URL}/analytics`);
         if (res.data.success) {
           setAnalyticsData(res.data.data);
         }
       } else if (activeTab === 'cases') {
-        const casesRes = await axios.get('http://localhost:5001/api/cases');
-        const officersRes = await axios.get('http://localhost:5001/api/users/officers');
+        const casesRes = await axios.get(`${API_URL}/cases`);
+        const officersRes = await axios.get(`${API_URL}/users/officers`);
         if (casesRes.data.success) setCases(casesRes.data.data);
         if (officersRes.data.success) setOfficers(officersRes.data.data);
       } else if (activeTab === 'users') {
-        const usersRes = await axios.get('http://localhost:5001/api/users');
-        const casesRes = await axios.get('http://localhost:5001/api/cases');
+        const usersRes = await axios.get(`${API_URL}/users`);
+        const casesRes = await axios.get(`${API_URL}/cases`);
         if (usersRes.data.success) {
           setUsers(usersRes.data.data);
         }
@@ -60,7 +61,7 @@ const AdminDashboard = () => {
         }
       } else if (activeTab === 'logs') {
         const token = localStorage.getItem('theft_protect_token') || user?.token;
-        const res = await axios.get('http://localhost:5001/api/users/admin/logs', {
+        const res = await axios.get(`${API_URL}/users/admin/logs`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data.success) {
@@ -76,7 +77,7 @@ const AdminDashboard = () => {
 
   const handleToggleUserStatus = async (userId, currentStatus) => {
     try {
-      const res = await axios.put(`http://localhost:5001/api/users/${userId}/status`, {
+      const res = await axios.put(`${API_URL}/users/${userId}/status`, {
         isActive: !currentStatus
       });
       if (res.data.success) {
@@ -91,7 +92,7 @@ const AdminDashboard = () => {
   const handleRejectOfficer = async (userId) => {
     if (!window.confirm('Are you sure you want to reject and delete this officer registration?')) return;
     try {
-      const res = await axios.delete(`http://localhost:5001/api/users/${userId}`);
+      const res = await axios.delete(`${API_URL}/users/${userId}`);
       if (res.data.success) {
         setUsers(users.filter(u => u._id !== userId));
         alert('Officer registration rejected and profile deleted.');
@@ -104,7 +105,7 @@ const AdminDashboard = () => {
   const handleAssignOfficer = async (caseId, officerId) => {
     if (!officerId) return;
     try {
-      const res = await axios.put(`http://localhost:5001/api/cases/${caseId}/assign`, {
+      const res = await axios.put(`${API_URL}/cases/${caseId}/assign`, {
         officerId
       });
       if (res.data.success) {

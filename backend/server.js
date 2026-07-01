@@ -47,10 +47,14 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`===========================================================`);
-  console.log(`THEFT PROTECTION COMMAND API RUNNING ON PORT: ${PORT}`);
-  console.log(`Local uploads served at http://localhost:${PORT}/uploads/`);
-  console.log(`===========================================================`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  const PORT = process.env.PORT || 5001; // default to 5001 to match env
+  app.listen(PORT, () => {
+    console.log(`===========================================================`);
+    console.log(`THEFT PROTECTION COMMAND API RUNNING ON PORT: ${PORT}`);
+    console.log(`Local uploads served at http://localhost:${PORT}/uploads/`);
+    console.log(`===========================================================`);
+  });
+}
+
+module.exports = app;

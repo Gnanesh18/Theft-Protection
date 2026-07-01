@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { generateFIRReportPDF } from '../utils/pdfGenerator';
 import { motion } from 'framer-motion';
@@ -20,7 +21,7 @@ const CitizenDashboard = () => {
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/cases');
+        const res = await axios.get(`${API_URL}/cases`);
         if (res.data.success) {
           const fetchedCases = res.data.data;
           setCases(fetchedCases);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Shield, FileText, CheckCircle2, Radio, MapPin, Eye, Brain, ArrowRight, Laptop, Smartphone, MessageSquare } from 'lucide-react';
@@ -45,7 +46,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchLandingData = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/analytics');
+        const res = await axios.get(`${API_URL}/analytics`);
         if (res.data.success) {
           setStats(res.data.data.summary);
         }
@@ -55,7 +56,7 @@ const LandingPage = () => {
 
       // Fetch cases to plot on map
       try {
-        const res = await axios.get('http://localhost:5001/api/cases');
+        const res = await axios.get(`${API_URL}/cases`);
         if (res.data.success && res.data.data.length > 0) {
           setMockCases(res.data.data);
         } else {

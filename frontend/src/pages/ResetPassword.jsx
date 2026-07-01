@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { motion } from 'framer-motion';
 import { Shield, KeyRound, CheckCircle, ArrowLeft, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
@@ -51,7 +52,7 @@ const ResetPassword = () => {
     setSubmitting(true);
 
     try {
-      const res = await axios.post(`http://localhost:5001/api/auth/reset-password/${id}`, { password });
+      const res = await axios.post(`${API_URL}/auth/reset-password/${id}`, { password });
       if (res.data.success) {
         setSuccessMessage(res.data.message || 'Password successfully updated.');
       }

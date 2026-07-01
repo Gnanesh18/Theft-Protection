@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { generateFIRReportPDF } from '../utils/pdfGenerator';
 import { Shield, Search, Filter, User, Calendar, MapPin, Download, AlertCircle, FilePlus } from 'lucide-react';
@@ -34,7 +35,7 @@ const OfficerDashboard = () => {
   const fetchOfficerCases = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5001/api/cases');
+      const res = await axios.get(`${API_URL}/cases`);
       if (res.data.success) {
         setCases(res.data.data);
         if (res.data.data.length > 0) {
@@ -64,7 +65,7 @@ const OfficerDashboard = () => {
     setActionError('');
     setUpdating(true);
     try {
-      const res = await axios.put(`http://localhost:5001/api/cases/${selectedCase._id}/status`, {
+      const res = await axios.put(`${API_URL}/cases/${selectedCase._id}/status`, {
         status: statusUpdate,
         note: statusNote
       });
@@ -90,7 +91,7 @@ const OfficerDashboard = () => {
     setActionError('');
     setUpdating(true);
     try {
-      const res = await axios.post(`http://localhost:5001/api/cases/${selectedCase._id}/notes`, {
+      const res = await axios.post(`${API_URL}/cases/${selectedCase._id}/notes`, {
         note: noteInput.trim()
       });
 
@@ -120,7 +121,7 @@ const OfficerDashboard = () => {
     });
 
     try {
-      const res = await axios.post(`http://localhost:5001/api/cases/${selectedCase._id}/evidence`, formPayload, {
+      const res = await axios.post(`${API_URL}/cases/${selectedCase._id}/evidence`, formPayload, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 

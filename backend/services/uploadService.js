@@ -3,7 +3,9 @@ const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
-const UPLOADS_DIR = path.join(__dirname, '../public/uploads');
+const UPLOADS_DIR = process.env.VERCEL 
+  ? '/tmp' 
+  : path.join(__dirname, '../public/uploads');
 
 // Ensure directory exists
 if (!fs.existsSync(UPLOADS_DIR)) {
