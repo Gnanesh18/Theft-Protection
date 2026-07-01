@@ -42,6 +42,15 @@ const ReportTheft = () => {
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     
+    // Check if any file exceeds 4MB (Vercel serverless request size limit is 4.5MB)
+    const maxSize = 4 * 1024 * 1024;
+    const oversizedFile = selectedFiles.find(file => file.size > maxSize);
+    if (oversizedFile) {
+      setError(`File "${oversizedFile.name}" exceeds the 4MB size limit for Vercel upload.`);
+      return;
+    }
+    setError('');
+    
     // Add to file list
     setFiles([...files, ...selectedFiles]);
 
@@ -111,9 +120,15 @@ const ReportTheft = () => {
       formPayload.append('evidence', file);
     });
 
+    const storedUser = localStorage.getItem('theft_protect_user');
+    const token = storedUser ? JSON.parse(storedUser).token : null;
+
     try {
       const res = await axios.post(`${API_URL}/cases`, formPayload, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        }
       });
 
       if (res.data.success) {

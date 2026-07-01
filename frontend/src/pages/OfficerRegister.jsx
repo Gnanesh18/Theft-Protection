@@ -277,7 +277,17 @@ const OfficerRegister = () => {
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => setIdCardFile(e.target.files[0])}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file && file.size > 4 * 1024 * 1024) {
+                    setError('Police ID card image exceeds 4MB size limit.');
+                    e.target.value = null; // Clear input
+                    setIdCardFile(null);
+                  } else {
+                    setError('');
+                    setIdCardFile(file);
+                  }
+                }}
                 className="block w-full text-xs text-slate-light
                   file:mr-3 file:py-1.5 file:px-3
                   file:rounded-md file:border file:border-navy-border

@@ -113,6 +113,14 @@ const OfficerDashboard = () => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
+    // Check if any file exceeds 4MB (Vercel payload limit)
+    const maxSize = 4 * 1024 * 1024;
+    const oversizedFile = files.find(f => f.size > maxSize);
+    if (oversizedFile) {
+      alert(`File "${oversizedFile.name}" exceeds the 4MB size limit for secure upload.`);
+      return;
+    }
+
     setUploadingFiles(true);
     setActionError('');
     const formPayload = new FormData();
@@ -120,9 +128,15 @@ const OfficerDashboard = () => {
       formPayload.append('evidence', f);
     });
 
+    const storedUser = localStorage.getItem('theft_protect_user');
+    const token = storedUser ? JSON.parse(storedUser).token : null;
+
     try {
       const res = await axios.post(`${API_URL}/cases/${selectedCase._id}/evidence`, formPayload, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        }
       });
 
       if (res.data.success) {
