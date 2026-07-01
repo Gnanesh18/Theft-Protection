@@ -19,7 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve Local Uploads Static Files
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+const uploadsPath = process.env.VERCEL 
+  ? '/tmp' 
+  : path.join(__dirname, 'public/uploads');
+
+app.use('/uploads', express.static(uploadsPath));
 
 // API Routes
 app.use('/api/auth', require('./routes/auth'));
