@@ -2,7 +2,9 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
 
-const LOG_FILE = path.join(__dirname, '../data/sent_emails.txt');
+const LOG_FILE = process.env.VERCEL 
+  ? '/tmp/sent_emails.txt' 
+  : path.join(__dirname, '../data/sent_emails.txt');
 
 // Ensure data directory exists
 if (!fs.existsSync(path.dirname(LOG_FILE))) {
