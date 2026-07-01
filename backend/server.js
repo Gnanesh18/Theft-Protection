@@ -18,6 +18,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Database connection middleware to ensure connection is ready in serverless environments
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
 // Serve Local Uploads Static Files
 const uploadsPath = process.env.VERCEL 
   ? '/tmp' 

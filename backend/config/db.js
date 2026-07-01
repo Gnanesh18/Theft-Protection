@@ -37,26 +37,38 @@ const seedMongoData = async () => {
   }
 };
 
+let connectionPromise = null;
+
 const connectDB = async () => {
+  if (connectionPromise) {
+    return connectionPromise;
+  }
+
   const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/theft_protection';
   console.log(`Connecting to MongoDB at: ${mongoURI.replace(/:([^:@]+)@/, ':****@')}`);
   
-  try {
-    mongoose.set('strictQuery', false);
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 3000
+  mongoose.set('strictQuery', false);
+
+  connectionPromise = mongoose.connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 3000
+  })
+    .then(async (conn) => {
+      console.log('MongoDB Connected Successfully.');
+      dbManager.setMongoConnected(true);
+      await seedMongoData();
+      return conn;
+    })
+    .catch((err) => {
+      console.error(`MongoDB Connection Failed: ${err.message}`);
+      console.log('Initiating fallback to Local JSON File Database...');
+      dbManager.setMongoConnected(false);
+      connectionPromise = null; // Reset to allow retry on subsequent requests
+      return null;
     });
-    console.log('MongoDB Connected Successfully.');
-    dbManager.setMongoConnected(true);
-    // Seed data
-    await seedMongoData();
-  } catch (err) {
-    console.error(`MongoDB Connection Failed: ${err.message}`);
-    console.log('Initiating fallback to Local JSON File Database...');
-    dbManager.setMongoConnected(false);
-  }
+
+  return connectionPromise;
 };
 
 module.exports = connectDB;
