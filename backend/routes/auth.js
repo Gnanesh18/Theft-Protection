@@ -141,7 +141,9 @@ router.post('/forgot-password', async (req, res) => {
     // In a real application, we would send a reset email. For our presentation, we log it and send success response.
     console.log(`Password reset link generated for ${email}`);
     
-    const resetUrl = `http://localhost:5173/reset-password/${user._id}`;
+    const origin = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
+    const frontendUrl = origin.replace(/\/$/, '');
+    const resetUrl = `${frontendUrl}/reset-password/${user._id}`;
 
     // Log request to admin/system log
     await db.systemLogs.create({
